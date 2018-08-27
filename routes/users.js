@@ -60,16 +60,17 @@ router.post('/register', function(req, res, next){
         access_token:'04b3afa2cda5490ea9e302b9b3347f6ebaf11bed',
         type:"pdd.ddk.oauth.goods.pid.generate",
         client_id:config.pdd_client_id,
-        timestamp:new Date().getTime(),
+        timestamp: Math.round(new Date().getTime()/1000).toString(),
         number:1,
-        p_id_name_list:['pid_for_'+username],
+        p_id_name_list:"[\"pid_for_"+username+"\"]",
     };
-    let sign=urlUtil.generateSign(params);
+    let sign=urlUtil.generateSign(urlUtil.paramsSort(params));
     params['sign']=sign;
-    console.log(urlUtil.paramsSort(params));
-     let pddApiUrl=urlUtil.urlConcat(config.pdd_api,urlUtil.paramsSort(params));
-     console.log(pddApiUrl);
-    // console.log(md5("testSecretaccess_tokenasd78172s8ds9a921j9qqwda12312w1w21211client_id1data_typeXMLorder_status1page1page_size10timestamp1480411125typepdd.order.number.list.gettestSecret").toUpperCase());
+    let pddApiUrl=urlUtil.urlConcat(config.pdd_api,urlUtil.paramsSort(params));
+    console.log(pddApiUrl);
+    axios.post(pddApiUrl,{}).then(({data})=>{
+        console.log(data.p_id_generate_response.p_id_list[0].p_id);
+    });
     //TODO
     // for jd
 
