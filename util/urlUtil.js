@@ -41,6 +41,5 @@ let urlUtil={
         sign+=config.pdd_client_secret;
         return md5(sign).toUpperCase();
     },
-
 };
 module.exports=urlUtil;
