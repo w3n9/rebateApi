@@ -24,7 +24,7 @@ router.post('/login', function(req, res, next) {
       console.log(msg);
       return res.status(200).json(jsonFormat(-2,msg,null));
     }
-    query("select password from reb_user where username=? limit 1",[username],(err,rows,fields)=>{
+    query("select password,pdd_id,jd_id,tb_id from reb_user where username=? limit 1",[username],(err,rows,fields)=>{
         if(err){
             msg="服务器内部错误";
             console.log(msg);
@@ -39,6 +39,9 @@ router.post('/login', function(req, res, next) {
         var token = jwt.sign({username: username}, config.secret);
         return res.status(200).json(jsonFormat(0,msg,{
           "token":token,
+          "pId":rows[0].pdd_id,
+          "jId":rows[0].jd_id,
+          "tId":rows[0].tb_id
         }));
     });
 
@@ -69,6 +72,7 @@ router.post('/register', function(req, res, next){
     let pddApiUrl=urlUtil.urlConcat(config.pdd_api,urlUtil.paramsSort(params));
     console.log(pddApiUrl);
     axios.post(pddApiUrl,{}).then(({data})=>{
+        console.log(data);
         console.log(data.p_id_generate_response.p_id_list[0].p_id);
     });
     //TODO
