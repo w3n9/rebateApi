@@ -15,10 +15,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 
-//全局变量的定义
-global.access_token="123";
-global.fresh_token="";
-global.isPddAuthorized=false;
 
 
 
@@ -52,9 +48,10 @@ app.use(expressJwt({secret: config.secret}).unless({path: [
         "/users/login",
         "/users/register",
         "/test","/favicon.ico",
-        "/is_authorized",
+        "/is_pdd_authorized",
         '/authorization_handle',
-        '/to_pdd']}));
+        '/to_pdd',
+        '/get_pdd_access_token']}));
 app.use(function (err, req, res, next) {
     if (err.name === "UnauthorizedError") {
         res.status(401).send("invalid token");
