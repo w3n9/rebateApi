@@ -26,7 +26,13 @@ router.post('/login', function(req, res, next) {
       console.log(msg);
       return res.status(200).json(jsonFormat(-2,msg,null));
     }
-    if(rows[0].password!==md5(md5(password)+rows[0].ec_salt)){
+    let pwd="";
+    if(rows[0].ec_salt===null||rows[0].ec_salt===""){
+        pwd=md5(password);
+    }else{
+        pwd=md5(md5(password)+rows[0].ec_salt);
+    }
+    if(rows[0].password!==pwd){
         msg="密码错误";
         console.log(msg);
         return res.status(200).json(jsonFormat(-2,msg,null));

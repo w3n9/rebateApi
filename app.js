@@ -51,7 +51,8 @@ app.use(expressJwt({secret: config.secret}).unless({path: [
         "/is_pdd_authorized",
         '/authorization_handle',
         '/to_pdd',
-        '/get_pdd_access_token']}));
+        '/get_pdd_access_token',
+        '/list_pdd_order']}));
 app.use(function (err, req, res, next) {
     if (err.name === "UnauthorizedError") {
         res.status(401).send("invalid token");

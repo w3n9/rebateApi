@@ -132,6 +132,25 @@ router.get('/authorization_handle',function(req,res,next){
   });
 });
 router.post("/list_pdd_order",(req,res,next)=>{
-    
+        let p_id=req.body.pId;
+        console.log(p_id);
+        let params={
+            type:"pdd.ddk.order.list.increment.get",
+            client_id:config.pdd_client_id,
+            timestamp: Math.round(new Date().getTime()/1000).toString(),
+            start_update_time:(Math.round(new Date().getTime()/1000)-90*24*60*60).toString(),
+            end_update_time:Math.round(new Date().getTime()/1000).toString(),
+            p_id:p_id
+        };
+        console.log(params);
+        let sign=urlUtil.generateSign(urlUtil.paramsSort(params));
+        params['sign']=sign;
+        let pddApiUrl=urlUtil.urlConcat(config.pdd_api,urlUtil.paramsSort(params));
+        console.log(pddApiUrl);
+        axios.post(pddApiUrl,{}).then(({data})=>{
+            console.log(data);
+            console.log(data.order_list_get_response);
+            return res.status(200).json(jsonFormat(0,"订单获取成功",data.order_list_get_response));
+        });
 });
 module.exports = router;
